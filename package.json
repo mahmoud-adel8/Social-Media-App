@@ -1,0 +1,19 @@
+{
+  "name": "social-media-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahmoud-adel8/Social-Media-App.git"
+  },
+  "author": "Mahmoud Adel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mahmoud-adel8/Social-Media-App/issues"
+  },
+  "homepage": "https://github.com/mahmoud-adel8/Social-Media-App#readme"
+}
