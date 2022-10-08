@@ -5,6 +5,8 @@ app = express();
 
 const feedRoutes = require('./routes/feed-routes');
 
+app.use(express.json());
+
 app.use(cors());
 
 app.use('/feed', feedRoutes);
