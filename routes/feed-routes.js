@@ -1,13 +1,18 @@
-const express = require('express');
+import { Router } from 'express';
 
-const feedController = require('../controllers/feed-controller');
-const postSchema = require('../schemas/post-schema');
-const validateRequestSchema = require('../middlewares/validate-request-schema');
+import FeedController from '../controllers/feed-controller.js';
+import { postSchema } from '../schemas/post-schema.js';
+import { validateRequestSchema } from '../middlewares/validate-request-schema.js';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/posts', feedController.getPosts);
+router.get('/posts', FeedController.getPosts);
 
-router.post('/posts', postSchema, validateRequestSchema, feedController.createPost);
+router.post(
+  '/posts',
+  postSchema,
+  validateRequestSchema,
+  FeedController.createPost
+);
 
-module.exports = router;
+export default router;

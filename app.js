@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
+import express, { json } from 'express';
+import cors from 'cors';
 
-app = express();
+import feedRoutes from './routes/feed-routes.js';
 
-const feedRoutes = require('./routes/feed-routes');
+const app = express();
 
-app.use(express.json());
+app.use(json());
 
 app.use(cors());
 
