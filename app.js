@@ -5,42 +5,18 @@ import express, { json } from 'express';
 import cors from 'cors';
 import { connect } from 'mongoose';
 import * as dotenv from 'dotenv';
-import multer from 'multer';
 
 import feedRoutes from './routes/feed-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
+import { upload } from './util/file-upload-helper.js';
 
 dotenv.config();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const PORT = process.env.PORT || 8080;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
-
-const fileStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './images');
-  },
-  filename: function (req, file, cb) {
-    const date = Date.now();
-    const fileName = date + '-' + file.originalname;
-    cb(null, fileName);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
-
 
 app.use(json());
 
@@ -56,9 +32,8 @@ app.use(errorHandling);
 
 try {
   await connect(process.env.MONGODB_URI);
-  app.listen(8080, () => {
-    console.log('listening on port 8080');
-  });
+  app.listen(PORT);
+  console.log('connected successfully')
 } catch (err) {
   console.log(err);
 }
