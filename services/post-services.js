@@ -15,7 +15,10 @@ export default class PostService {
       const post = new PostModel(postObj);
       return await post.save();
     } catch (err) {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
     }
   }
 
