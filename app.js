@@ -1,3 +1,6 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import express, { json } from 'express';
 import cors from 'cors';
 import { connect } from 'mongoose';
@@ -8,11 +11,15 @@ import { errorHandling } from './middlewares/error-handling.js';
 
 dotenv.config();
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 const app = express();
 
 app.use(json());
 
 app.use(cors());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/feed', feedRoutes);
 

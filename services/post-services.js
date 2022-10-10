@@ -1,11 +1,14 @@
-import PostModel  from "../models/post-model.js";
+import * as dotenv from 'dotenv';
+
+import PostModel from '../models/post-model.js';
+
+dotenv.config();
 
 export default class PostService {
-
   static async findAll() {
     try {
       return await PostModel.find();
-    } catch(err) {
+    } catch (err) {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -22,7 +25,7 @@ export default class PostService {
         throw err;
       }
       return post;
-    } catch(err) {
+    } catch (err) {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -32,7 +35,10 @@ export default class PostService {
 
   static async save(postObj) {
     try {
-      const post = new PostModel(postObj);
+      const post = new PostModel({
+        ...postObj,
+        imageUrl: process.env.DOMAIN + postObj.imageUrl,
+      });
       return await post.save();
     } catch (err) {
       if (!err.statusCode) {
@@ -41,5 +47,4 @@ export default class PostService {
       throw err;
     }
   }
-
 }
