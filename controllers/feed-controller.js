@@ -1,17 +1,22 @@
+import PostService from '../services/post-services.js';
+
 export default class FeedController {
-  static getPosts(req, res, next) {
-    res.status(200).json({
-      title: 'First Post',
-      content: 'This is the first post',
-    });
+
+  static async getPosts(req, res, next) {
+    const posts = await PostService.findAll();
+    res.status(200).json(posts);
   }
 
-  static createPost(req, res, next) {
-    const title = req.body.title;
-    const content = req.body.content;
-    res.status(201).json({
-      message: 'a post was created successfully.',
-      post: { title: title, console: content },
-    });
+  static async createPost(req, res, next) {
+    try {
+      const post = await PostService.save(req.body);
+      res.status(201).json({
+        message: 'a post was created successfully.',
+        post: post,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
+
 }
