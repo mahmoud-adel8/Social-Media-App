@@ -8,6 +8,8 @@ const router = Router();
 
 router.get('/posts', FeedController.getPosts);
 
+router.get('/posts/:postId', FeedController.getPost);
+
 router.post(
   '/posts',
   postSchema,

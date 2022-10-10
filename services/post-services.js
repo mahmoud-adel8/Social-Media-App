@@ -10,6 +10,23 @@ export default class PostService {
     }
   }
 
+  static async findById(_id) {
+    try {
+      const post = await PostModel.findById(_id);
+      if (!post) {
+        const err = new Error('Post cannot be found');
+        err.statusCode = 500;
+        throw err;
+      }
+      return post;
+    } catch(err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
+
   static async save(postObj) {
     try {
       const post = new PostModel(postObj);
