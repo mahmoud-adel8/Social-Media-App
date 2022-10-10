@@ -8,9 +8,6 @@ export default class FeedController {
         .status(200)
         .json({ message: 'Posts fetched successfully.', posts: posts });
     } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
       next(err);
     }
   }
@@ -23,9 +20,6 @@ export default class FeedController {
         .status(200)
         .json({ message: 'Post fetched successfully.', post: post });
     } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
       next(err);
     }
   }
@@ -38,9 +32,6 @@ export default class FeedController {
         post: post,
       });
     } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
       next(err);
     }
   }
