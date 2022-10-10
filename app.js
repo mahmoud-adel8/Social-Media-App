@@ -1,9 +1,12 @@
 import express, { json } from 'express';
 import cors from 'cors';
 import { connect } from 'mongoose';
+import * as dotenv from 'dotenv';
 
 import feedRoutes from './routes/feed-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -16,9 +19,7 @@ app.use('/feed', feedRoutes);
 app.use(errorHandling);
 
 try {
-  await connect(
-    'mongodb+srv://mahmoud:JJ2zilgHXlKANTjm@node-course.jgl0qhv.mongodb.net/social-media-app?retryWrites=true&w=majority'
-  );
+  await connect(process.env.MONGODB_URI);
   app.listen(8080, () => {
     console.log('listening on port 8080');
   });
