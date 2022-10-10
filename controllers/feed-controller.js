@@ -25,8 +25,14 @@ export default class FeedController {
   }
 
   static async createPost(req, res, next) {
+    const imageUrl = req.file.path || undefined;
+    const postObj = {
+      ...req.body,
+      imageUrl,
+      creator: { name: req.body.creator },
+    };
     try {
-      const post = await PostService.save(req.body);
+      const post = await PostService.save(postObj);
       res.status(201).json({
         message: 'a post was created successfully.',
         post: post,
