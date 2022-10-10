@@ -1,7 +1,6 @@
 import PostService from '../services/post-services.js';
 
 export default class FeedController {
-
   static async getPosts(req, res, next) {
     const posts = await PostService.findAll();
     res.status(200).json(posts);
@@ -15,8 +14,10 @@ export default class FeedController {
         post: post,
       });
     } catch (err) {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     }
   }
-
 }

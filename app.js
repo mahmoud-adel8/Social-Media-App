@@ -3,6 +3,7 @@ import cors from 'cors';
 import { connect } from 'mongoose';
 
 import feedRoutes from './routes/feed-routes.js';
+import { errorHandling } from './middlewares/error-handling.js';
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(json());
 app.use(cors());
 
 app.use('/feed', feedRoutes);
+
+app.use(errorHandling);
 
 try {
   await connect(
