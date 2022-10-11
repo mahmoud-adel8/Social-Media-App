@@ -17,4 +17,11 @@ router.post(
   FeedController.createPost
 );
 
+router.put(
+  '/posts/:postId',
+  postSchema,
+  validateRequestSchema,
+  FeedController.updatePost
+);
+
 export default router;

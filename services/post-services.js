@@ -47,4 +47,26 @@ export default class PostService {
       throw err;
     }
   }
+
+  static async update(postId, postObj) {
+    try {
+      const post = await PostModel.findById(postId);
+      if (!post) {
+        const err = new Error('Post cannot be found.');
+        err.statusCode = 500;
+        throw err;
+      }
+      post.title = postObj.title;
+      post.content = postObj.content;
+      if (postObj.imageUrl && post.imageUrl !== process.env.DOMAIN + postObj.imageUrl) {
+        post.imageUrl = process.env.DOMAIN + postObj.imageUrl;
+      }
+      return await post.save();
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
 }

@@ -25,7 +25,10 @@ export default class FeedController {
   }
 
   static async createPost(req, res, next) {
-    const imageUrl = req.file.path || undefined;
+    let imageUrl;
+    if (req.file) {
+      imageUrl = req.file.path;
+    }
     const postObj = {
       ...req.body,
       imageUrl,
@@ -37,6 +40,26 @@ export default class FeedController {
         message: 'a post was created successfully.',
         post: post,
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updatePost(req, res, next) {
+    const postId = req.params.postId;
+    let imageUrl = req.body.imageUrl;
+    if (req.file) {
+      const imageUrl = req.file.path
+    }
+    const postObj = {
+      ...req.body,
+      imageUrl,
+    };
+    try {
+      const post = await PostService.update(postId, postObj);
+      res
+        .status(200)
+        .json({ message: 'Post updated successfully.', post: post });
     } catch (err) {
       next(err);
     }
