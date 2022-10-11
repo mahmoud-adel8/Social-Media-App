@@ -49,7 +49,7 @@ export default class FeedController {
     const postId = req.params.postId;
     let imageUrl = req.body.imageUrl;
     if (req.file) {
-      imageUrl = req.file.path
+      imageUrl = req.file.path;
     }
     const postObj = {
       ...req.body,
@@ -60,6 +60,18 @@ export default class FeedController {
       res
         .status(200)
         .json({ message: 'Post updated successfully.', post: post });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deletePost(req, res, next) {
+    const postId = req.params.postId;
+    try {
+      const deletedPost = await PostService.delete(postId);
+      res
+        .status(200)
+        .json({ message: 'Post deleted successfully.', post: deletedPost });
     } catch (err) {
       next(err);
     }

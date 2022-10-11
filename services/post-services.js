@@ -55,12 +55,7 @@ export default class PostService {
 
   static async update(postId, postObj) {
     try {
-      const post = await PostModel.findById(postId);
-      if (!post) {
-        const err = new Error('Post cannot be found.');
-        err.statusCode = 500;
-        throw err;
-      }
+      const post = this.findById(postId);
 
       post.title = postObj.title;
       post.content = postObj.content;
@@ -72,8 +67,21 @@ export default class PostService {
         clearImage(imageUrlToPath(post.imageUrl));
         post.imageUrl = imagePathToUrl(postObj.imageUrl);
       }
-      
+
       return await post.save();
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
+
+  static async delete(postId) {
+    try {
+      const post = await this.findById(postId);
+      clearImage(imageUrlToPath(post.imageUrl));
+      return await post.delete();
     } catch (err) {
       if (!err.statusCode) {
         err.statusCode = 500;

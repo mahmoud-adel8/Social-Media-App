@@ -24,4 +24,6 @@ router.put(
   FeedController.updatePost
 );
 
+router.delete('/posts/:postId', FeedController.deletePost);
+
 export default router;
