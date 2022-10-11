@@ -8,13 +8,11 @@ import * as dotenv from 'dotenv';
 
 import feedRoutes from './routes/feed-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
-import { upload } from './util/file-upload-helper.js';
+import { upload, __dirname } from './util/file-helper.js';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 8080;
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -22,7 +20,7 @@ app.use(json());
 
 app.use(cors());
 
-app.use(upload.single('image'));
+app.use(upload().single('image'));
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

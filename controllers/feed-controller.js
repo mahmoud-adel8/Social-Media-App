@@ -49,7 +49,7 @@ export default class FeedController {
     const postId = req.params.postId;
     let imageUrl = req.body.imageUrl;
     if (req.file) {
-      const imageUrl = req.file.path
+      imageUrl = req.file.path
     }
     const postObj = {
       ...req.body,

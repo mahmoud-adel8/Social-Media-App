@@ -1,6 +1,11 @@
 import * as dotenv from 'dotenv';
 
 import PostModel from '../models/post-model.js';
+import {
+  clearImage,
+  imagePathToUrl,
+  imageUrlToPath,
+} from '../util/file-helper.js';
 
 dotenv.config();
 
@@ -37,7 +42,7 @@ export default class PostService {
     try {
       const post = new PostModel({
         ...postObj,
-        imageUrl: process.env.DOMAIN + postObj.imageUrl,
+        imageUrl: imagePathToUrl(postObj.imageUrl),
       });
       return await post.save();
     } catch (err) {
@@ -56,11 +61,18 @@ export default class PostService {
         err.statusCode = 500;
         throw err;
       }
+
       post.title = postObj.title;
       post.content = postObj.content;
-      if (postObj.imageUrl && post.imageUrl !== process.env.DOMAIN + postObj.imageUrl) {
-        post.imageUrl = process.env.DOMAIN + postObj.imageUrl;
+
+      if (
+        postObj.imageUrl &&
+        post.imageUrl !== imagePathToUrl(postObj.imageUrl)
+      ) {
+        clearImage(imageUrlToPath(post.imageUrl));
+        post.imageUrl = imagePathToUrl(postObj.imageUrl);
       }
+      
       return await post.save();
     } catch (err) {
       if (!err.statusCode) {
