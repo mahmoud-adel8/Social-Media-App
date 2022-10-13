@@ -9,10 +9,14 @@ import {
 
 dotenv.config();
 
+const postsPerPage = 2;
+
 export default class PostService {
-  static async findAll() {
+  static async getPosts(pageNum) {
     try {
-      return await PostModel.find();
+      return await PostModel.find()
+        .skip((pageNum - 1) * postsPerPage)
+        .limit(postsPerPage);
     } catch (err) {
       if (!err.statusCode) {
         err.statusCode = 500;
@@ -21,7 +25,7 @@ export default class PostService {
     }
   }
 
-  static async findById(_id) {
+  static async getPostById(_id) {
     try {
       const post = await PostModel.findById(_id);
       if (!post) {
@@ -55,7 +59,7 @@ export default class PostService {
 
   static async update(postId, postObj) {
     try {
-      const post = this.findById(postId);
+      const post = this.getPostById(postId);
 
       post.title = postObj.title;
       post.content = postObj.content;
@@ -77,9 +81,9 @@ export default class PostService {
     }
   }
 
-  static async delete(postId) {
+  static async deleteById(postId) {
     try {
-      const post = await this.findById(postId);
+      const post = await this.getPostById(postId);
       clearImage(imageUrlToPath(post.imageUrl));
       return await post.delete();
     } catch (err) {
