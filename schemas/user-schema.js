@@ -11,3 +11,5 @@ const schema = [
     .isLength({ min: 5 })
     .withMessage('email must be at least 5 characters.'),
 ];
+
+export { schema as userSchema };
