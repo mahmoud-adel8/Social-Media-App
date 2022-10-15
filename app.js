@@ -7,6 +7,7 @@ import { connect } from 'mongoose';
 import * as dotenv from 'dotenv';
 
 import feedRoutes from './routes/feed-routes.js';
+import authRoutes from './routes/auth-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
 import { upload, __dirname } from './util/file-helper.js';
 
@@ -26,12 +27,14 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/feed', feedRoutes);
 
+app.use('/auth', authRoutes);
+
 app.use(errorHandling);
 
 try {
   await connect(process.env.MONGODB_URI);
   app.listen(PORT);
-  console.log('connected successfully')
+  console.log('connected successfully');
 } catch (err) {
   console.log(err);
 }
