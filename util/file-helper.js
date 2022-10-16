@@ -2,8 +2,11 @@ import multer from 'multer';
 import * as dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export function upload() {
   const fileStorage = multer.diskStorage({
