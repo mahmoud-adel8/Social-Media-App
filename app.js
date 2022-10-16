@@ -8,9 +8,10 @@ import * as dotenv from 'dotenv';
 
 import feedRoutes from './routes/feed-routes.js';
 import authRoutes from './routes/auth-routes.js';
-import { errorHandling } from './middlewares/error-handling.js';
+import { errorHandler } from './middlewares/error-handler.js';
 import { upload } from './util/file-helper.js';
 import { verifyToken } from './middlewares/authorization.js';
+import { notFoundHandler } from './middlewares/not-found-handler.js';
 
 dotenv.config();
 
@@ -32,7 +33,9 @@ app.use('/feed', verifyToken, feedRoutes);
 
 app.use('/auth', authRoutes);
 
-app.use(errorHandling);
+app.use(notFoundHandler);
+
+app.use(errorHandler);
 
 try {
   await connect(process.env.MONGODB_URI);
