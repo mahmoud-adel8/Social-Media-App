@@ -1,4 +1,5 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import express, { json } from 'express';
 import cors from 'cors';
@@ -8,12 +9,14 @@ import * as dotenv from 'dotenv';
 import feedRoutes from './routes/feed-routes.js';
 import authRoutes from './routes/auth-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
-import { upload, __dirname } from './util/file-helper.js';
+import { upload } from './util/file-helper.js';
 import { verifyToken } from './middlewares/authorization.js';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 8080;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
