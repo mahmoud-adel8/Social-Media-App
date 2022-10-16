@@ -8,4 +8,6 @@ const router = Router();
 
 router.put('/signup', userSchema, validateRequestSchema, AuthController.signup);
 
+router.post('/login', )
+
 export default router;
