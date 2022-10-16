@@ -1,5 +1,4 @@
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 import express, { json } from 'express';
 import cors from 'cors';
@@ -10,6 +9,7 @@ import feedRoutes from './routes/feed-routes.js';
 import authRoutes from './routes/auth-routes.js';
 import { errorHandling } from './middlewares/error-handling.js';
 import { upload, __dirname } from './util/file-helper.js';
+import { verifyToken } from './middlewares/authorization.js';
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.use(upload().single('image'));
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/feed', feedRoutes);
+app.use('/feed', verifyToken, feedRoutes);
 
 app.use('/auth', authRoutes);
 
