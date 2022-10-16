@@ -59,7 +59,7 @@ export default class PostService {
 
   static async update(postId, postObj) {
     try {
-      const post = this.getPostById(postId);
+      const post = await this.getPostById(postId);
 
       post.title = postObj.title;
       post.content = postObj.content;
