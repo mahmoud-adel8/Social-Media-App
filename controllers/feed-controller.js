@@ -1,4 +1,5 @@
 import PostService from '../services/post-services.js';
+import UserService from '../services/user-services.js';
 
 export default class FeedController {
   static async getPosts(req, res, next) {
@@ -33,13 +34,15 @@ export default class FeedController {
     const postObj = {
       ...req.body,
       imageUrl,
-      creator: { name: req.body.creator },
+      creator: req.userId,
     };
     try {
       const post = await PostService.save(postObj);
+      const creator = await UserService.addPost(post);
       res.status(201).json({
         message: 'a post was created successfully.',
         post: post,
+        creator: { _id: creator._id, name: creator.name },
       });
     } catch (err) {
       next(err);

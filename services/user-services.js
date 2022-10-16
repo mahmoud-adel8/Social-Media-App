@@ -55,4 +55,17 @@ export default class UserService {
       throw err;
     }
   }
+
+  static async addPost(userId, post) {
+    try {
+      const user = await UserModel.findById(userId);
+      user.posts.push(post);
+      return await user.save();
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
 }

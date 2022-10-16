@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const userSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
@@ -15,12 +15,14 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    default: 'available'
+    default: 'available',
   },
-  posts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Post'
-  }]
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
 });
 
 const UserModel = model('User', userSchema);
