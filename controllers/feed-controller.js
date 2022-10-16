@@ -38,7 +38,7 @@ export default class FeedController {
     };
     try {
       const post = await PostService.save(postObj);
-      const creator = await UserService.addPost(req.userId, post);
+      const creator = await UserService.addPost(post);
       res.status(201).json({
         message: 'a post was created successfully.',
         post: post,
@@ -73,9 +73,14 @@ export default class FeedController {
     const postId = req.params.postId;
     try {
       const deletedPost = await PostService.deleteById(postId);
+      const creator = await UserService.deletePost(deletedPost);
       res
         .status(200)
-        .json({ message: 'Post deleted successfully.', post: deletedPost });
+        .json({
+          message: 'Post deleted successfully.',
+          post: deletedPost,
+          creator: creator,
+        });
     } catch (err) {
       next(err);
     }

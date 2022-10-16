@@ -7,7 +7,6 @@ import UserModel from '../models/user-model.js';
 dotenv.config();
 
 export default class UserService {
-
   static async findById(id) {
     try {
       const user = await UserModel.findById(id);
@@ -74,11 +73,25 @@ export default class UserService {
     }
   }
 
-  static async addPost(userId, post) {
+  static async addPost(post) {
     try {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(post.creator);
       user.posts.push(post);
       return await user.save();
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
+
+  static async deletePost(post) {
+    try {
+      return await UserModel.updateOne(
+        { _id: post.creator },
+        { $pull: { posts: post._id } }
+      );
     } catch (err) {
       if (!err.statusCode) {
         err.statusCode = 500;
