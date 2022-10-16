@@ -38,7 +38,7 @@ export default class FeedController {
     };
     try {
       const post = await PostService.save(postObj);
-      const creator = await UserService.addPost(post);
+      const creator = await UserService.addPost(req.userId, post);
       res.status(201).json({
         message: 'a post was created successfully.',
         post: post,

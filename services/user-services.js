@@ -7,6 +7,24 @@ import UserModel from '../models/user-model.js';
 dotenv.config();
 
 export default class UserService {
+
+  static async findById(id) {
+    try {
+      const user = await UserModel.findById(id);
+      if (!user) {
+        const err = new Error('User cannot be found.');
+        err.statusCode = 422;
+        throw err;
+      }
+      return user;
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      throw err;
+    }
+  }
+
   static async signup(userObj) {
     const { email, password } = { ...userObj };
     try {
