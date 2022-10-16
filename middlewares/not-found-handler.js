@@ -1,6 +1,6 @@
-export async function notFoundHandler (req, res, next) {
+import APIError from '../util/api-error.js';
+
+export async function notFoundHandler(req, res, next) {
   const { url } = req;
-  const err = new Error(`URL not found: ${url}`);
-  err.statusCode = 404;
-  next(err);
-};
+  next(APIError.notFound(`URL not found: ${url}`));
+}

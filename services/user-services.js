@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
 import UserModel from '../models/user-model.js';
+import APIError from '../util/api-error.js';
 
 dotenv.config();
 
@@ -11,16 +12,11 @@ export default class UserService {
     try {
       const user = await UserModel.findById(id);
       if (!user) {
-        const err = new Error('User cannot be found.');
-        err.statusCode = 422;
-        throw err;
+        throw APIError.unprocessableEntity('user cannot be found.');
       }
       return user;
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.of(error);
     }
   }
 
@@ -29,19 +25,16 @@ export default class UserService {
     try {
       const userExists = await UserModel.exists({ email: email });
       if (userExists) {
-        const err = new Error('A user with this email already exists.');
-        err.statusCode = 422;
-        throw err;
+        throw APIError.unprocessableEntity(
+          'a user with this email already exists, try signing in.'
+        );
       }
       const hashedPassword = await bcrypt.hash(password, 12);
       userObj.password = hashedPassword;
       const user = new UserModel(userObj);
       return await user.save();
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.of(error);
     }
   }
 
@@ -49,27 +42,20 @@ export default class UserService {
     try {
       const user = await UserModel.findOne({ email: email });
       if (!user) {
-        const err = new Error('Invalid email or password.');
-        err.statusCode = 401;
-        throw err;
+        throw APIError.unprocessableEntity('invalid email or password.');
       }
 
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-        const err = new Error('Invalid email or password.');
-        err.statusCode = 401;
-        throw err;
+        throw APIError.unprocessableEntity('invalid email or password.');
       }
 
       const jwtPayload = { userId: user._id.toString(), email: user.email };
       const jwtSecret = process.env.JWT_SECRET;
       const jwtConfig = { expiresIn: process.env.JWT_EXPIRATION };
       return jwt.sign(jwtPayload, jwtSecret, jwtConfig);
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -78,11 +64,8 @@ export default class UserService {
       const user = await UserModel.findById(post.creator);
       user.posts.push(post);
       return await user.save();
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -92,11 +75,8 @@ export default class UserService {
         { _id: post.creator },
         { $pull: { posts: post._id } }
       );
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 }

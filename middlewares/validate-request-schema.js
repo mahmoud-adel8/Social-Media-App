@@ -1,4 +1,5 @@
 import { validationResult } from 'express-validator';
+import APIError from '../util/api-error.js';
 import { clearImage } from '../util/file-helper.js';
 
 export function validateRequestSchema(req, res, next) {
@@ -7,10 +8,7 @@ export function validateRequestSchema(req, res, next) {
     if (req.file) {
       clearImage(req.file.path);
     }
-    const err = new Error('The date entered is not correct.');
-    err.statusCode = 422;
-    err.details = errors.array();
-    throw err;
+    next(APIError.unprocessableEntity(undefined, errors.array()));
   }
   next();
 }

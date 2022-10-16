@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 
 import PostModel from '../models/post-model.js';
+import APIError from '../util/api-error.js';
 import {
   clearImage,
   imagePathToUrl,
@@ -17,11 +18,8 @@ export default class PostService {
       return await PostModel.find()
         .skip((pageNum - 1) * postsPerPage)
         .limit(postsPerPage);
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -29,16 +27,11 @@ export default class PostService {
     try {
       const post = await PostModel.findById(_id);
       if (!post) {
-        const err = new Error('Post cannot be found');
-        err.statusCode = 500;
-        throw err;
+        throw APIError.badRequest();
       }
       return post;
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -49,11 +42,8 @@ export default class PostService {
         imageUrl: imagePathToUrl(postObj.imageUrl),
       });
       return await post.save();
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -73,11 +63,8 @@ export default class PostService {
       }
 
       return await post.save();
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 
@@ -86,11 +73,8 @@ export default class PostService {
       const post = await this.getPostById(postId);
       clearImage(imageUrlToPath(post.imageUrl));
       return await post.delete();
-    } catch (err) {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      throw err;
+    } catch (error) {
+      throw APIError.from(error);
     }
   }
 }
