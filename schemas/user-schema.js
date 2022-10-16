@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-const schema = [
+export const signupSchema = [
   body('name').trim().notEmpty().withMessage('Name cannot be empty.'),
   body('email')
     .isEmail()
@@ -12,4 +12,13 @@ const schema = [
     .withMessage('email must be at least 5 characters.'),
 ];
 
-export { schema as userSchema };
+export const signinSchema = [
+  body('email')
+    .isEmail()
+    .withMessage('Email entered is not valid.')
+    .normalizeEmail(),
+  body('password')
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage('email must be at least 5 characters.'),
+];
