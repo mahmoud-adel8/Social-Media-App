@@ -16,6 +16,7 @@ export default class PostService {
   static async getPosts(pageNum) {
     try {
       return await PostModel.find()
+        .sort({ createdAt: -1 })
         .skip((pageNum - 1) * postsPerPage)
         .limit(postsPerPage)
         .populate('creator', 'name email');
