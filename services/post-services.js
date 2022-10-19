@@ -26,7 +26,10 @@ export default class PostService {
 
   static async getPostById(_id) {
     try {
-      const post = await PostModel.findById(_id);
+      const post = await PostModel.findById(_id).populate(
+        'creator',
+        'name email'
+      );
       if (!post) {
         throw APIError.badRequest();
       }
