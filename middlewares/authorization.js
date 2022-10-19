@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import UserService from '../services/user-services.js';
 import APIError from '../util/api-error.js';
+import PostService from '../services/post-services.js';
 
 dotenv.config();
 
@@ -23,10 +24,10 @@ export async function verifyToken(req, res, next) {
 
 export async function authorizeUser(req, res, next) {
   const postId = req.params.postId;
+  const userId = req.userId;
   try {
-    const user = await UserService.findById(req.userId);
-    const post = user.posts.find(p => p.toString() === postId);
-    if (!post) {
+    const post = await PostService.getPostById(postId);
+    if (post._id.toString() !== userId) {
       throw APIError.forbidden();
     }
     next();
