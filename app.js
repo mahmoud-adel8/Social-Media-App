@@ -12,6 +12,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 import { upload } from './util/file-helper.js';
 import { verifyToken } from './middlewares/authorization.js';
 import { notFoundHandler } from './middlewares/not-found-handler.js';
+import * as socketIO from './util/socket.js';
 
 dotenv.config();
 
@@ -39,8 +40,12 @@ app.use(errorHandler);
 
 try {
   await connect(process.env.MONGODB_URI);
-  app.listen(PORT);
+  const server = app.listen(PORT);
   console.log('connected successfully');
+  const io = socketIO.init(server);
+  io.on('connection', socket => {
+    console.log('client connected.')
+  })
 } catch (err) {
   console.log(err);
 }

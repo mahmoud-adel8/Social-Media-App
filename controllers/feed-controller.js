@@ -1,5 +1,6 @@
 import PostService from '../services/post-services.js';
 import UserService from '../services/user-services.js';
+import { getIO } from '../util/socket.js';
 
 export default class FeedController {
   static async getPosts(req, res, next) {
@@ -39,6 +40,10 @@ export default class FeedController {
     try {
       const post = await PostService.save(postObj);
       const creator = await UserService.addPost(post);
+
+      const io = getIO();
+      io.emit('posts', { action: 'create', post: post });
+
       res.status(201).json({
         message: 'a post was created successfully.',
         post: post,
@@ -74,13 +79,11 @@ export default class FeedController {
     try {
       const deletedPost = await PostService.deleteById(postId);
       const creator = await UserService.deletePost(deletedPost);
-      res
-        .status(200)
-        .json({
-          message: 'Post deleted successfully.',
-          post: deletedPost,
-          creator: creator,
-        });
+      res.status(200).json({
+        message: 'Post deleted successfully.',
+        post: deletedPost,
+        creator: creator,
+      });
     } catch (err) {
       next(err);
     }
