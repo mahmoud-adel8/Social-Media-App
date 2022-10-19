@@ -66,6 +66,10 @@ export default class FeedController {
     };
     try {
       const post = await PostService.update(postId, postObj);
+
+      const io = getIO();
+      io.emit('posts', { action: 'updated', post: post });
+
       res
         .status(200)
         .json({ message: 'Post updated successfully.', post: post });
@@ -79,6 +83,10 @@ export default class FeedController {
     try {
       const deletedPost = await PostService.deleteById(postId);
       const creator = await UserService.deletePost(deletedPost);
+
+      const io = getIO();
+      io.emit('posts', { action: 'delete', post: deletedPost });
+
       res.status(200).json({
         message: 'Post deleted successfully.',
         post: deletedPost,
