@@ -17,7 +17,8 @@ export default class PostService {
     try {
       return await PostModel.find()
         .skip((pageNum - 1) * postsPerPage)
-        .limit(postsPerPage);
+        .limit(postsPerPage)
+        .populate('creator', 'name email');
     } catch (error) {
       throw APIError.from(error);
     }
