@@ -15,6 +15,9 @@ export async function verifyToken(req, res, next) {
     const token = authHeader.slice(7);
     const jwtSecret = process.env.JWT_SECRET;
     const payload = jwt.verify(token, jwtSecret);
+    if (!payload) {
+      throw APIError.forbidden();
+    }
     req.userId = payload.userId;
     next();
   } catch (error) {
